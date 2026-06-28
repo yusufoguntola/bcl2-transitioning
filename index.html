@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic & Professional Transitioning — Slide Deck</title>
+    <!-- Google Fonts: Roboto & JetBrains Mono only -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for clean, modern iconography -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Tailwind CSS for high efficiency responsive design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Roboto"', 'sans-serif'],
+                        serif: ['"Roboto"', 'sans-serif'], // Maps legacy serif selectors to Roboto as well
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0B0F19',
+                            slate: '#1E293B',
+                            teal: '#0D9488',
+                            accent: '#D9F99D',
+                            coral: '#F43F5E',
+                            indigo: '#4F46E5',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Global Reset */
+        body {
+            background-color: #05070B;
+            font-family: 'Roboto', sans-serif;
+            color: #F8FAFC;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Slide Container maintaining fixed 16:9 ratio */
+        .slide-aspect-ratio-box {
+            position: relative;
+            width: 1280px;
+            height: 720px;
+            aspect-ratio: 16 / 9;
+            transform-origin: center center;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Presentation themes */
+        .slide-theme-dark {
+            background: linear-gradient(135deg, #090D1A 0%, #111827 100%);
+            color: #F8FAFC;
+        }
+
+        .slide-theme-light {
+            background: linear-gradient(135deg, #FAFBFD 0%, #F1F5F9 100%);
+            color: #0F172A;
+        }
+
+        /* Interactive slide transitions */
+        .slide-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+            transform: scale(0.98);
+            pointer-events: none;
+        }
+
+        .slide-slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+            pointer-events: auto;
+            z-index: 10;
+        }
+
+        /* Scrollbar aesthetics for content blocks */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #94A3B8;
+            border-radius: 3px;
+        }
+
+        /* Abstract structural background effects */
+        .bg-grid-pattern {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        .bg-grid-pattern-light {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+        }
+
+        /* Formula Card layout shadow details */
+        .formula-glow {
+            box-shadow: 0 0 25px rgba(13, 148, 136, 0.15);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center relative">
+
+    <!-- Backdrops -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(79,70,229,0.15),transparent_45%)] z-0 pointer-events-none"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(13,148,136,0.1),transparent_40%)] z-0 pointer-events-none"></div>
+
+    <!-- Presentation Viewport Container -->
+    <div id="presentation-viewport" class="flex flex-col items-center justify-center w-full h-full p-4 md:p-8 z-10 select-none">
+        
+        <!-- Interactive Controller HUD -->
+        <div class="w-full max-w-[1280px] flex justify-between items-center mb-4 px-2 text-slate-400">
+            <div class="flex items-center gap-4">
+                <span class="text-xs font-mono uppercase tracking-widest bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/50 flex items-center gap-2 font-sans">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Presenter Console
+                </span>
+                <span class="text-xs font-medium text-slate-500 hidden sm:inline font-sans" id="keyboard-hint">
+                    Use <kbd class="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 font-sans">←</kbd> <kbd class="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 font-sans">→</kbd> or <kbd class="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 font-sans">Space</kbd>
+                </span>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button onclick="toggleViewMode()" class="px-3.5 py-1.5 rounded-md bg-slate-800 border border-slate-700 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition-colors flex items-center gap-2 font-sans" id="view-mode-btn">
+                    <i class="fa-solid fa-arrows-spin"></i> Slide Show View
+                </button>
+                <span class="text-sm font-mono font-bold text-teal-400 bg-slate-900/90 px-3 py-1.5 rounded-md border border-teal-900/30" id="global-slide-counter">
+                    01 / 18
+                </span>
+            </div>
+        </div>
+
+        <!-- Master Aspect Container representing standard slide size -->
+        <div id="slide-canvas" class="slide-aspect-ratio-box shadow-2xl rounded-2xl overflow-hidden border border-slate-800/50 font-sans">
+
+            <!-- Slide 1: Title Slide (Dark Theme) -->
+            <section class="slide-slide active slide-theme-dark bg-grid-pattern flex flex-col justify-between p-16" data-theme="dark" data-slide-id="1">
+                <div class="absolute inset-0 bg-radial-gradient from-teal-950/20 to-transparent pointer-events-none"></div>
+                <div class="flex justify-between items-start">
+                    <div class="px-4 py-1.5 rounded-full border border-teal-500/30 bg-teal-950/40 backdrop-blur-md">
+                        <span class="text-xs font-bold uppercase tracking-widest text-teal-400 font-sans">
+                            Yusuf Oguntola | Chief Technology Officer, AFEX
+                        </span>
+                    </div>
+                    <div class="text-xs text-slate-500 font-mono">SLIDE 01</div>
+                </div>
+                
+                <div class="my-auto max-w-4xl space-y-6">
+                    <h1 class="text-6xl font-black tracking-tight leading-none font-sans text-white">
+                        Academic & Professional <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-lime-300">Transitioning</span>
+                    </h1>
+                    <p class="text-xl text-slate-400 leading-relaxed font-sans max-w-2xl">
+                        The Unspoken Reality — A Strategic Playbook for Career Shifts, High-Impact Pivots, and Building Career Capital.
+                    </p>
+                </div>
+
+                <div class="flex justify-between items-end border-t border-slate-800/80 pt-6 font-sans">
+                    <div class="space-y-1">
+                        <p class="text-xs text-slate-500 font-mono uppercase tracking-wider">Lecture Event</p>
+                        <p class="text-sm font-bold text-slate-300">Open Chat @ BCL | Episode 2</p>
+                    </div>
+                    <div class="text-right space-y-1">
+                        <p class="text-xs text-slate-500 font-mono uppercase tracking-wider">Event Schedule</p>
+                        <p class="text-sm font-bold text-slate-300">27th June 2026 | Google Meet</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 2: Section Divider 1 (Dark Focus) -->
+            <section class="slide-slide slide-theme-dark bg-grid-pattern flex flex-col justify-between p-16" data-theme="dark" data-slide-id="2">
+                <div class="absolute inset-0 bg-gradient-to-tr from-indigo-950/30 via-slate-950/10 to-teal-950/20 pointer-events-none"></div>
+                <div class="flex justify-between items-center text-slate-500 text-xs font-mono">
+                    <span>SECTION 01</span>
+                    <span>SLIDE 02</span>
+                </div>
+
+                <div class="my-auto max-w-3xl space-y-4 font-sans">
+                    <div class="w-16 h-1.5 bg-teal-400 rounded-full"></div>
+                    <h2 class="text-5xl font-extrabold font-sans text-white tracking-tight">
+                        The "What's Next?" Paralysis
+                    </h2>
+                    <p class="text-xl text-slate-400 leading-relaxed">
+                        Decoding the psychological, mental, and practical barriers that halt high achievers in their tracks during major career transitions.
+                    </p>
+                </div>
+
+                <div class="flex justify-between items-center border-t border-slate-800/80 pt-6 font-sans">
+                    <span class="text-xs font-mono text-slate-500 tracking-wider">FOCUS: OVERCOMING STRUCTURAL STAGNATION</span>
+                    <span class="text-sm font-bold text-slate-400 font-sans">Open Chat @ BCL</span>
+                </div>
+            </section>
+
+            <!-- Slide 3: Understanding the Paralysis (Light Theme / Two-Column Tiles) -->
+            <section class="slide-slide slide-theme-light bg-grid-pattern-light flex flex-col justify-between p-16" data-theme="light" data-slide-id="3">
+                <div class="flex justify-between items-start font-sans">
+                    <h3 class="text-2xl font-extrabold tracking-tight text-slate-900 border-l-4 border-teal-500 pl-4 font-sans">
+                        Understanding the Paralysis
+                    </h3>
+                    <span class="text-xs text-slate-400 font-mono">SLIDE 03</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-8 my-auto font-sans">
+                    <!-- What is it tile -->
+                    <div class="bg-white/90 border border-slate-200/80 rounded-xl p-8 shadow-sm flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <span class="text-xs font-mono text-teal-600 uppercase tracking-widest font-bold">The Definition</span>
+                            <h4 class="text-2xl font-extrabold text-slate-900 font-sans">What is it?</h4>
+                            <p class="text-slate-600 leading-relaxed font-sans">
+                                The overwhelming feeling of not knowing what the next strategic step should be. It is a psychological transition fog that keeps otherwise high-performing professionals frozen inside existing comfort zones.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100 flex items-center gap-2 text-teal-600 text-sm font-semibold font-sans">
+                            <i class="fa-solid fa-brain"></i> Cognitive Overload State
+                        </div>
+                    </div>
+
+                    <!-- Why we get stuck tile -->
+                    <div class="bg-white/90 border border-slate-200/80 rounded-xl p-8 shadow-sm flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <span class="text-xs font-mono text-rose-600 uppercase tracking-widest font-bold font-sans">The Diagnostics</span>
+                            <h4 class="text-2xl font-extrabold text-slate-900 font-sans">Why We Get Stuck</h4>
+                            <ul class="space-y-2 text-sm text-slate-600 font-sans">
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-circle-chevron-right text-rose-500 mt-1"></i>
+                                    <span><strong>Paradox of Choice:</strong> Too many directions, zero baseline clarity.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-circle-chevron-right text-rose-500 mt-1"></i>
+                                    <span><strong>Decidophobia:</strong> Deep, paralyzing fear of picking the wrong path.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-circle-chevron-right text-rose-500 mt-1"></i>
+                                    <span><strong>Social Mirroring:</strong> Pressure to conform to peer standards & society.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-circle-chevron-right text-rose-500 mt-1"></i>
+                                    <span><strong>The "Fully Ready" Illusion:</strong> Perfectionism fueling procrastination.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-xs text-slate-400 font-mono border-t border-slate-200 pt-4">
+                    <span>OVERCOMING PARALYSIS</span>
+                    <span>BCL LECTURE SERIES</span>
+                </div>
+            </section>
+
+            <!-- Slide 4: The "Buzz Job" Dilemma (Light Theme / Image Right, Text Left) -->
+            <section class="slide-slide slide-theme-light bg-grid-pattern-light flex flex-col justify-between p-16" data-theme="light" data-slide-id="4">
+                <div class="flex justify-between items-start font-sans">
+                    <h3 class="text-2xl font-extrabold tracking-tight text-slate-900 border-l-4 border-teal-500 pl-4 font-sans">
+                        The "Buzz Job" Dilemma
+                    </h3>
+                    <span class="text-xs text-slate-400 font-mono">SLIDE 04</span>
+                </div>
+
+                <div class="grid grid-cols-12 gap-8 my-auto items-center font-sans">
+                    <div class="col-span-7 space-y-6">
+                        <div class="space-y-1">
+                            <span class="text-xs font-mono text-teal-600 uppercase tracking-widest font-bold">Alignment Strategy</span>
+                            <h4 class="text-xl font-bold text-slate-800 font-sans">Decoupling societal hype from strategic reality.</h4>
+                        </div>
+                        
+                        <div class="space-y-4 text-slate-600 text-sm font-sans">
+                            <p class="leading-relaxed">
+                                <strong>Chasing Societal Sirens:</strong> Many transitions are initiated not because of individual misalignment, but by the gravitational pull of trending industries (e.g., Tech, Web3, AI) that are currently fashionable.
+                            </p>
+                            <p class="leading-relaxed">
+                                <strong>Aesthetics vs. Daily Friction:</strong> Loving the prestigious *concept* of a career pathway is vastly different from building tolerance for its *daily operational friction* (e.g., debugging production systems, resolving database locks, standardizing complex APIs).
+                            </p>
+                            <div class="p-4 bg-teal-50 border border-teal-200/50 rounded-lg text-teal-950 italic flex items-center gap-3 font-sans">
+                                <i class="fa-solid fa-filter text-teal-600 text-lg"></i>
+                                <span><strong>The Hype Litmus Test:</strong> "Would I choose this exact operational path if it was no longer globally trending or prestigious tomorrow?"</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-5">
+                        <div class="bg-slate-100 rounded-xl overflow-hidden border border-slate-200 shadow-md p-2">
+                            <img alt="Strategic career crossroads planning" class="rounded-lg max-h-[320px] w-full object-contain bg-slate-50" src="https://iwonaandrews.com/wp-content/uploads/2024/07/iwonaandrews-blog-lider-na-rozdrozu-pytania-artykul-biznes-obrazek-1B.png" onerror="this.src='https://placehold.co/500x320/e2e8f0/0f172a?text=Career+Crossroads'">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-xs text-slate-400 font-mono border-t border-slate-200 pt-4">
+                    <span>THE ROADMAP CRITERIA</span>
+                    <span>PAGE 04</span>
+                </div>
+            </section>
+
+            <!-- Slide 5: Is Your Career Actually Broken? (Light Theme / Two-Column Tiled) -->
+            <section class="slide-slide slide-theme-light bg-grid-pattern-light flex flex-col justify-between p-16" data-theme="light" data-slide-id="5">
+                <div class="flex justify-between items-start font-sans">
+                    <h3 class="text-2xl font-extrabold tracking-tight text-slate-900 border-l-4 border-teal-500 pl-4 font-sans">
+                        Is Your Career Actually Broken?
+                    </h3>
+                    <span class="text-xs text-slate-400 font-mono">SLIDE 05</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-8 my-auto font-sans">
+                    <!-- Left Tile: Environmental Illusion -->
+                    <div class="bg-white/90 border border-slate-200 rounded-xl p-8 shadow-sm flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="w-10 h-10 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-tree-city"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-slate-900 font-sans">The Environmental Illusion</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                Often, the system is fine, but the *workspace* is toxic. Exhaustion, severe burnout, or bad management can mimic career misalignment. 
+                            </p>
+                            <p class="text-sm text-slate-500 leading-relaxed italic border-l-2 border-slate-200 pl-3">
+                                Changing team layout, departments, or firms can resolve your professional blocks without liquidating your career capital.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Right Tile: Skill Polish Alternative -->
+                    <div class="bg-white/90 border border-slate-200 rounded-xl p-8 shadow-sm flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-screwdriver-wrench"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-slate-900 font-sans">The Skill Polish Alternative</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed font-sans">
+                                If others in your same core discipline are executing exceptionally well and thriving, your field is not broken. You may just need to update your tools.
+                            </p>
+                            <p class="text-sm text-slate-500 leading-relaxed italic border-l-2 border-slate-200 pl-3">
+                                Expand your commercial lens, study state-of-the-art frameworks, or change *how* you deliver your assets rather than resetting back to junior levels.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-xs text-slate-400 font-mono border-t border-slate-200 pt-4">
+                    <span>DIAGNOSING TRANSITIONS</span>
+                    <span>PAGE 05</span>
+                </div>
+            </section>
+
+            <!-- Slide 6: Types of Transitioning (Light Theme / Split Panels Layout) -->
+            <section class="slide-slide slide-theme-light bg-grid-pattern-light flex flex-col justify-between p-16" data-theme="light" data-slide-id="6">
+                <div class="flex justify-between items-start font-sans">
+                    <h3 class="text-2xl font-extrabold tracking-tight text-slate-900 border-l-4 border-teal-500 pl-4 font-sans">
+                        Types of Transitioning
+                    </h3>
+                    <span class="text-xs text-slate-400 font-mono">SLIDE 06</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-8 my-auto font-sans">
+                    <!-- Left Side: Career Transition -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-8 shadow-sm flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-rose-500/5 rounded-bl-full pointer-events-none"></div>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center text-lg">
+                                    <i class="fa-solid fa-arrows-split-up-and-left"></i>
+                                </div>
+                                <span class="text-xs font-mono font-bold text-rose-600 uppercase tracking-widest">Vertical Pivot</span>
+                            </div>
+                            <h4 class="text-2xl font-black text-slate-900 font-sans">Transitioning Between Careers</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed font-sans">
+                                You are moving from one career or core skillset to an entirely different one (e.g., academic researcher to software engineer). This requires massive cognitive restructuring and skill acquisition.
+                            </p>
+                        </div>
+                        <div class="mt-6 p-3 bg-rose-50/50 rounded-lg border border-rose-100 text-xs text-rose-900 font-sans">
+                            <strong>Key Challenge:</strong> High re-learning tax and an initial temporary loss of your established operational authority.
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Industry Transition -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-8 shadow-sm flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-teal-500/5 rounded-bl-full pointer-events-none"></div>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center text-lg">
+                                    <i class="fa-solid fa-arrows-left-right-to-line"></i>
+                                </div>
+                                <span class="text-xs font-mono font-bold text-teal-600 uppercase tracking-widest">Lateral Shift</span>
+                            </div>
+                            <h4 class="text-2xl font-black text-slate-900 font-sans">Transitioning Between Industries</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed font-sans">
+                                You are maintaining your exact functional skills but migrating into a completely new sector (e.g., software engineering in logistics to healthcare). You carry your functional authority across.
+                            </p>
+                        </div>
+                        <div class="mt-6 p-3 bg-teal-50/50 rounded-lg border border-teal-100 text-xs text-teal-900 font-sans">
+                            <strong>Key Challenge:</strong> Translating your jargon and learning the unique regulatory, commercial, and risk frameworks of the new domain.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-xs text-slate-400 font-mono border-t border-slate-200 pt-4">
+                    <span>TRANSITION TAXONOMY</span>
+                    <span>PAGE 06</span>
+                </div>
+            </section>
+
+            <!-- Slide 7: Managing Transition Stress & Expectations (Light Theme / Comparative Layout) -->
+            <section class="slide-slide slide-theme-light bg-grid-pattern-light flex flex-col justify-between p-16" data-theme="light" data-slide-id="7">
+                <div class="flex justify-between items-start font-sans">
+                    <h3 class="text-2xl font-extrabold tracking-tight text-slate-900 border-l-4 border-teal-500 pl-4 font-sans">
+                        Stress, Expectations &amp; Risk Profiles
+                    </h3>
+                    <span class="text-xs text-slate-400 font-mono">SLIDE 07</span>
+                </div>
+
+                <div class="grid grid-cols-12 gap-8 my-auto font-sans">
+                    <div class="col-span-12 md:col-span-4 bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm space-y-4 font-sans">
+                        <span class="text-xs font-mono font-extrabold text-slate-400 uppercase tracking-widest block">Structural Audit</span>
+                        <h4 class="text-lg font-bold text-slate-900 font-sans">Divergent Expectations</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                            Understanding whether you are executing a <strong>vertical skill swap</strong> or a <strong>lateral domain shift</strong> fundamentally changes your psychological stress levels and how soon you can command seniority.
+                        </p>
+                        <div class="p-3 bg-slate-50 border border-slate-150 rounded-lg text-xs text-slate-500 italic">
+                            Choosing the wrong target profile results in severe transition burnout and career stagnation.
+                        </div>
+                    </div>
+
+                    <div class="col-span-12 md:col-span-8 overflow-hidden rounded-xl border border-slate-200 shadow-sm bg-white font-sans">
+                        <table class="w-full text-left border-collapse font-sans">
+                            <thead>
+                                <tr class="bg-slate-900 text-white text-[10px] font-mono uppercase tracking-wider">
+                                    <th class="p-3.5 border-b border-slate-800">Pivot Parameter</th>
+                                    <th class="p-3.5 border-b border-slate-800 text-rose-400">Career/Skill Pivot</th>
+                                    <th class="p-3.5 border-b border-slate-800 text-teal-400">Industry/Domain Pivot</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-xs text-slate-600 divide-y divide-slate-100 font-sans">
+                                <tr>
+                                    <td class="p-3.5 font-bold bg-slate-50/55">Identity Stress</td>
+                                    <td class="p-3.5 text-rose-700 font-sans"><strong>Severe.</strong> Rebuilding your professional self-esteem from scratch.</td>
+                                    <td class="p-3.5 text-teal-800 font-sans"><strong>Low-Moderate.</strong> You are still the same expert; only the room has changed.</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3.5 font-bold bg-slate-50/55">Earning Power Impact</td>
+                                    <td class="p-3.5 text-rose-700 font-sans"><strong>High Risk.</strong> Initial step back to baseline or mid-level compensation.</td>
+                                    <td class="p-3.5 text-teal-800 font-sans"><strong>Neutral-Positive.</strong> Leverage existing skillsets for identical or higher pay.</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3.5 font-bold bg-slate-50/55">Preparation Window</td>
+                                    <td class="p-3.5 text-rose-700 font-sans"><strong>6 to 18 Months.</strong> Needs active upskilling, testing, &amp; certification.</td>
+                                    <td class="p-3.5 text-teal-800 font-sans"><strong>1 to 3 Months.</strong> Requires domain terminology mapping and warm intros.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-xs text-slate-400 font-mono border-t border-slate-200 pt-4">
+                    <span>MANAGING EXPECTATIONS</span>
+                    <span>PAGE 07</span>
+                </div>
+            </section>
+
+            <!-- Slide 8: Deciding the Right Time (Light Theme / Three Vertical Tiles) -->
+            <section class="slide-slide slide-theme-light bg-grid-pattern-light flex flex-col justify-between p-16" data-theme="light" data-slide-id="8">
+                <div class="flex justify-between items-start font-sans">
+                    <h3 class="text-2xl font-extrabold tracking-tight text-slate-900 border-l-4 border-teal-500 pl-4 font-sans">
+                        When is the Right Time to Pivot?
+                    </h3>
+                    <span class="text-xs text-slate-400 font-mono">SLIDE 08</span>
+                </div>
+
+                <div class="grid grid-cols-3 gap-6 my-auto font-sans">
+                    <!-- Tile 1: Push vs Pull -->
+                    <div class="bg-white border border-slate-200/80 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="w-10 h-10 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center text-lg font-bold">
+                                <i class="fa-solid fa-compass"></i>
+                            </div>
+                            <h4 class="text-lg font-extrabold text-slate-900 font-sans">Push vs. Pull</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                                Do not pivot because of pain or temporary workload spikes. Transition toward systematic career growth where you've hit a definitive structural skill ceiling.
+                            </p>
+                        </div>
+                        <span class="text-[10px] font-mono uppercase tracking-widest text-slate-400 mt-4">MOTIVATIONAL AUDIT</span>
+                    </div>
+
+                    <!-- Tile 2: The Runway -->
+                    <div class="bg-white border border-slate-200/80 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg font-bold">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <h4 class="text-lg font-extrabold text-slate-900 font-sans">The Capital Runway</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                                Set up a robust 6–12 months cash runway and mentally brace your family for the emotional friction. Transition periods require resilience as you restart as a junior explorer.
+                            </p>
+                        </div>
+                        <span class="text-[10px] font-mono uppercase tracking-widest text-slate-400 mt-4">STABILITY BUFFER</span>
+                    </div>
+
+                    <!-- Tile 3: The Sequence -->
+                    <div class="bg-white border border-slate-200/80 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-lg font-bold">
+                                <i class="fa-solid fa-network-wired"></i>
+                            </div>
+                            <h4 class="text-lg font-extrabold text-slate-900 font-sans">Pre-Pivot Protocol</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                                Systematically audit existing assets. Sandbox the target role via low-stakes side gigs. Connect with active practitioners to validate actual job demands.
+                            </p>
+                        </div>
+                        <span class="text-[10px] font-mono uppercase tracking-widest text-slate-400 mt-4">ACTION SEQUENCE</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-xs text-slate-400 font-mono border-t border-slate-200 pt-4 font-sans">
+                    <span>CHRONOLOGY OF A PIVOT</span>
+                    <span>PAGE 08</span>
+                </div>
+            </section>
+
+            <!-- Slide 9: The Unspoken Reality (Dark Quote Slide) -->
+            <section class="slide-slide slide-theme-dark bg-grid-pattern flex flex-col justify-between p-16" data-theme="dark" data-slide-id="9">
+                <div class="absolute inset-0 bg-radial-gradient from-indigo-950/20 to-transparent pointer-events-none"></div>
+                <div class="flex justify-between items-center text-slate-500 text-xs font-mono">
+                    <span>THE PHILOSOPHICAL SHIFT</span>
+                    <span>SLIDE 09</span>
+                </div>
+
+                <div class="my-auto max-w-4xl text-center space-y-8 mx-auto font-sans">
+                    <span class="text-6xl text-teal-400 block font-sans font-black">“</span>
+                    <h2 class="text-4xl font-sans font-medium italic text-white leading-relaxed tracking-wide px-8">
+                        You don't have to see the entire staircase <br>to take the first step.
+                    </h2>
+                    <div class="w-12 h-1 bg-teal-400 mx-auto rounded-full"></div>
+                    
+                    <div class="grid grid-cols-3 gap-6 pt-6 text-left font-sans">
+                        <div class="p-4 rounded-lg bg-slate-900/50 border border-slate-800/60">
+                            <h4 class="text-xs font-mono text-teal-400 font-bold mb-1 uppercase">Truth 01</h4>
+                            <p class="text-xs text-slate-400 font-sans">Most visionary tech and corporate leaders navigated non-linear paths without predefined blueprints.</p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-slate-900/50 border border-slate-800/60">
+                            <h4 class="text-xs font-mono text-teal-400 font-bold mb-1 uppercase">Truth 02</h4>
+                            <p class="text-xs text-slate-400 font-sans">Linear progression is dead. Modern careers behave as organic networks, dynamic skill clusters, and portfolio careers.</p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-slate-900/50 border border-slate-800/60">
+                            <h4 class="text-xs font-mono text-teal-400 font-bold mb-1 uppercase">Truth 03</h4>
+                            <p class="text-xs text-slate-400 font-sans">Deep structural clarity is born strictly from running practical sandboxes, never from endless abstract thinking.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-xs text-slate-500 font-mono border-t border-slate-850 pt-4 font-sans">
+                    <span>THE STAIRCASE MINDSET</span>
+                    <span>PAGE 09</span>
+                </div>
+            </section>
+
+            <!-- Slide 10: Defeating Execution Freeze (Light Theme / Icon-Supported Bullets) -->
+            <section class="slide-slide slide-theme-light bg-grid-pattern-light flex flex-col justify-between p-16" data-theme="light" data-slide-id="10">
+                <div class="flex justify-between items-start font-sans">
+                    <h3 class="text-2xl font-extrabold tracking-tight text-slate-900 border-l-4 border-teal-500 pl-4 font-sans">
+                        Practical Ways to Move Forward
+                    </h3>
+                    <span class="text-xs text-slate-400 font-mono">SLIDE 10</span>
+                </div>
+
+                <div class="my-auto max-w-4xl space-y-6 mx-auto font-sans">
+                    <!-- Bullet 1 -->
+                    <div class="flex gap-6 items-start">
+                        <div class="w-12 h-12 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-flask"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="text-lg font-bold text-slate-950 font-sans">1. Start with Small Experiments</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed font-sans">
+                                Seek out low-barrier gigs, shadow practitioners, freelance, or design micro open-source products. Sandboxed actions generate real-world experience, and action naturally removes decision fog.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Bullet 2 -->
+                    <div class="flex gap-6 items-start">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-crosshairs"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="text-lg font-bold text-slate-950 font-sans">2. Focus on Next Month, Not Ten Years</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed font-sans">
+                                Halt long-term abstract modeling. Focus strictly on near-term checkpoints. Ask: <i>"What single target project can I build this month? Who can I interview? What exact framework should I parse?"</i>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Bullet 3 -->
+                    <div class="flex gap-6 items-start">
+                        <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="text-lg font-bold text-slate-950 font-sans">3. Reframe the Risk of Uncertainty</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed font-sans">
+                                Change the self-narrative. Stop asking <i>"What if this complete venture fails?"</i> and rewrite it to <i>"What critical skills will this structured experiment teach me that I can reuse?"</i>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-xs text-slate-400 font-mono border-t border-slate-200 pt-4 font-sans">
+                    <span>EXECUTION BLUEPRINT</span>
+                    <span>PAGE 10</span>
+                </div>
+            </section>
+
+            <!-- Slide 11: Section Divider 2 (Dark Focus) -->
+            <section class="slide-slide slide-theme-dark bg-grid-pattern flex flex-col justify-between p-16" data-theme="dark" data-slide-id="11">
+                <div class="absolute inset-0 bg-gradient-to-tr from-indigo-950/30 via-slate-950/10 to-teal-950/20 pointer-events-none"></div>
+                <div class="flex justify-between items-center text-slate-500 text-xs font-mono">
+                    <span>SECTION 02</span>
+                    <span>SLIDE 11</span>
+                </div>
+
+                <div class="my-auto max-w-3xl space-y-4 font-sans">
+                    <div class="w-16 h-1.5 bg-indigo-500 rounded-full"></div>
+                    <h2 class="text-5xl font-extrabold font-sans text-white tracking-tight">
+                        Switching Lanes Without Starting Over
+                    </h2>
+                    <p class="text-xl text-slate-400 leading-relaxed font-sans">
+                        How to pivot into high-impact corporate or tech roles without falling into the "entry-level" trap or discarding your historic execution equity.
+                    </p>
+                </div>
+
+                <div class="flex justify-between items-center border-t border-slate-800/80 pt-6 font-sans">
+                    <span class="text-xs font-mono text-slate-500 tracking-wider">FOCUS: STRATEGIC EQUITY PROTECTION</span>
+                    <span class="text-sm font-bold text-slate-400 font-sans">Open Chat @ BCL</span>
+                </div>
+            </section>
+
+            <!-- Slide 12: Demolishing the "Ground Zero" Trap (Light Theme / Three Vertical Tiles) -->
+            <section class="slide-slide slide-theme-light bg-grid-pattern-light flex flex-col justify-between p-16" data-theme="light" data-slide-id="12">
+                <div class="flex justify-between items-start font-sans">
+                    <h3 class="text-2xl font-extrabold tracking-tight text-slate-900 border-l-4 border-indigo-500 pl-4 font-sans">
+                        Demolishing the Ground Zero Trap
+                    </h3>
+                    <span class="text-xs text-slate-400 font-mono">SLIDE 12</span>
+                </div>
+
+                <div class="grid grid-cols-3 gap-6 my-auto font-sans">
+                    <!-- Tile 1 -->
+                    <div class="bg-white border border-slate-200/80 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="w-10 h-10 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center text-lg font-bold">
+                                <i class="fa-solid fa-shield"></i>
+                            </div>
+                            <h4 class="text-lg font-extrabold text-slate-900 font-sans">Experience Fallacy</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                                Completely writing off past leadership, project delivery, and operations as irrelevant is a critical strategic failure. Core organizational leadership translates flawlessly.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Tile 2 -->
+                    <div class="bg-white border border-slate-200/80 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg font-bold">
+                                <i class="fa-solid fa-id-badge"></i>
+                            </div>
+                            <h4 class="text-lg font-extrabold text-slate-900 font-sans">The Credibility Gap</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                                Failing to grasp your new target market’s vernacular. Transitioning requires framing past historical successes in pure business-value metrics.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Tile 3 -->
+                    <div class="bg-white border border-slate-200/80 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-lg font-bold">
+                                <i class="fa-solid fa-circle-nodes"></i>
+                            </div>
+                            <h4 class="text-lg font-extrabold text-slate-900 font-sans">Cold Launch Trap</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                                Relying purely on black-box online resumes. High-tier, seamless transitions happen almost entirely through deliberate, targeted peer network-building.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-xs text-slate-400 font-mono border-t border-slate-200 pt-4 font-sans">
+                    <span>MID-CAREER TRANSITIONS</span>
+                    <span>PAGE 12</span>
+                </div>
+            </section>
+
+            <!-- Slide 13: Preserving Your True Worth (Light Theme / Bleed Image Right) -->
+            <section class="slide-slide slide-theme-light flex flex-col justify-between p-0 overflow-hidden" data-theme="light" data-slide-id="13">
+                <div class="grid grid-cols-12 h-full font-sans">
+                    <!-- Left side content -->
+                    <div class="col-span-7 flex flex-col justify-between p-16 bg-grid-pattern-light h-full">
+                        <div class="flex justify-between items-start w-full">
+                            <h3 class="text-2xl font-extrabold tracking-tight text-slate-900 border-l-4 border-indigo-500 pl-4 font-sans">
+                                Preserving Your True Worth
+                            </h3>
+                        </div>
+
+                        <div class="my-auto space-y-4 max-w-xl font-sans">
+                            <span class="text-xs font-mono text-indigo-600 uppercase tracking-widest font-bold">Asset Architecture</span>
+                            <h4 class="text-xl font-bold text-slate-800 font-sans">Your legacy career is your primary competitive edge.</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                                Do not discount years of operational planning, execution, and critical analysis. Seamless career migration packages executive strategy and cross-functional oversight to resolve target problems immediately. Avoid accepting entry-level wages when you possess mature strategic skillsets.
+                            </p>
+
+                            <!-- Math Formula Card with explicit Roboto mono fallback styling -->
+                            <div class="formula-card p-4 rounded-xl bg-slate-900 text-white formula-glow border border-slate-800 space-y-2 font-sans">
+                                <p class="text-[10px] font-mono text-teal-400 uppercase tracking-widest font-bold text-center">Pivot Value Formula</p>
+                                <div class="flex justify-center py-2">
+                                    <math display="block" class="text-lg font-mono">
+                                        <msub><mi>V</mi><text>pivot</text></msub>
+                                        <mo>=</mo>
+                                        <mo>(</mo>
+                                        <msub><mi>S</text><text>transfer</text></msub>
+                                        <mo>×</mo>
+                                        <msub><mi>E</text><text>core</text></msub>
+                                        <mo>)</mo>
+                                        <mo>+</mo>
+                                        <msub><mi>N</text><text>active</text></msub>
+                                    </math>
+                                </div>
+                                <p class="text-[9px] text-slate-400 text-center leading-tight font-sans">
+                                    Where S = Transferable Skills, E = Core Experience, N = Active Network
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center text-xs text-slate-400 font-mono border-t border-slate-200 pt-4">
+                            <span>REPACKAGING SKILLS</span>
+                            <span>PAGE 13</span>
+                        </div>
+                    </div>
+
+                    <!-- Right side bleed image -->
+                    <div class="col-span-5 h-full relative">
+                        <img alt="Corporate Strategic Alignment" class="w-full h-full object-cover" src="https://rkycareers.com/blog/wp-content/uploads/2022/05/organisation-career-path.jpg" onerror="this.src='https://placehold.co/500x720/0B0F19/ffffff?text=Corporate+Alignment'">
+                        <div class="absolute inset-0 bg-gradient-to-r from-slate-100/10 via-transparent to-transparent"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 14: Section Divider 3 (Dark Focus) -->
+            <section class="slide-slide slide-theme-dark bg-grid-pattern flex flex-col justify-between p-16" data-theme="dark" data-slide-id="14">
+                <div class="absolute inset-0 bg-gradient-to-tr from-indigo-950/30 via-slate-950/10 to-teal-950/20 pointer-events-none"></div>
+                <div class="flex justify-between items-center text-slate-500 text-xs font-mono">
+                    <span>SECTION 03</span>
+                    <span>SLIDE 14</span>
+                </div>
+
+                <div class="my-auto max-w-3xl space-y-4 font-sans">
+                    <div class="w-16 h-1.5 bg-emerald-400 rounded-full"></div>
+                    <h2 class="text-5xl font-extrabold font-sans text-white tracking-tight">
+                        Transferable Skills That Matter
+                    </h2>
+                    <p class="text-xl text-slate-400 leading-relaxed font-sans">
+                        The core competencies every transition seeker must possess to survive and thrive during rapid career or academic shifts.
+                    </p>
+                </div>
+
+                <div class="flex justify-between items-center border-t border-slate-800/80 pt-6 font-sans">
+                    <span class="text-xs font-mono text-slate-500 tracking-wider">FOCUS: PILLARS OF CAREER ADAPTABILITY</span>
+                    <span class="text-sm font-bold text-slate-400 font-sans">Open Chat @ BCL</span>
+                </div>
+            </section>
+
+            <!-- Slide 15: The Pivot-Proof Skill Set (Light Theme / Icon-Supported Bullets) -->
+            <section class="slide-slide slide-theme-light bg-grid-pattern-light flex flex-col justify-between p-16" data-theme="light" data-slide-id="15">
+                <div class="flex justify-between items-start font-sans">
+                    <h3 class="text-2xl font-extrabold tracking-tight text-slate-900 border-l-4 border-emerald-500 pl-4 font-sans">
+                        The Pivot-Proof Skill Set
+                    </h3>
+                    <span class="text-xs text-slate-400 font-mono">SLIDE 15</span>
+                </div>
+
+                <div class="my-auto max-w-4xl space-y-6 mx-auto font-sans">
+                    <!-- Bullet 1 -->
+                    <div class="flex gap-6 items-start">
+                        <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="text-lg font-bold text-slate-950 font-sans">Meta-Learning &amp; Cognitive Agility</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed font-sans">
+                                The high-end intellectual agility to systematically breakdown and master deeply unfamiliar domains, locate key operational points, and execute on strategies with clinical accuracy.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Bullet 2 -->
+                    <div class="flex gap-6 items-start">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="text-lg font-bold text-slate-950 font-sans">Strategic Narrative Crafting</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed font-sans">
+                                The refined execution skill to package highly complex academic records, scientific experiments, or abstract frameworks into extremely clear, business-driven corporate value assets.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Bullet 3 -->
+                    <div class="flex gap-6 items-start">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-users-viewfinder"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="text-lg font-bold text-slate-950 font-sans">Influence Without Authority</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed font-sans">
+                                The essential leadership asset of managing, guiding, and aligning cross-functional teams toward critical strategic outcomes without possessing direct operational control.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-xs text-slate-400 font-mono border-t border-slate-200 pt-4 font-sans">
+                    <span>SKILL DECK BLUEPRINT</span>
+                    <span>PAGE 15</span>
+                </div>
+            </section>
+
+            <!-- Slide 16: Mapping Your Prior Value (Light Theme / Translation Table) -->
+            <section class="slide-slide slide-theme-light bg-grid-pattern-light flex flex-col justify-between p-16" data-theme="light" data-slide-id="16">
+                <div class="flex justify-between items-start font-sans">
+                    <h3 class="text-2xl font-extrabold tracking-tight text-slate-900 border-l-4 border-emerald-500 pl-4 font-sans">
+                        Mapping Your Prior Value
+                    </h3>
+                    <span class="text-xs text-slate-400 font-mono">SLIDE 16</span>
+                </div>
+
+                <div class="my-auto overflow-hidden rounded-xl border border-slate-200 shadow-md font-sans">
+                    <table class="w-full text-left border-collapse bg-white font-sans">
+                        <thead>
+                            <tr class="bg-slate-900 text-white text-xs font-mono uppercase tracking-wider">
+                                <th class="p-4 border-b border-slate-800">Prior / Academic Activity</th>
+                                <th class="p-4 border-b border-slate-800 text-teal-400">Professional Translation</th>
+                                <th class="p-4 border-b border-slate-800 text-indigo-400">Strategic Business Value</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-600 text-xs leading-relaxed divide-y divide-slate-100 font-sans">
+                            <tr>
+                                <td class="p-3.5 font-medium font-sans">Conducting complex literature reviews</td>
+                                <td class="p-3.5 text-teal-700 font-bold font-sans">Competitive Intelligence Gathering</td>
+                                <td class="p-3.5 text-slate-600 font-sans">Synthesizes key market intelligence to inform product pivot strategies.</td>
+                            </tr>
+                            <tr class="bg-slate-50/50">
+                                <td class="p-3.5 font-medium font-sans">Executing structured laboratory research</td>
+                                <td class="p-3.5 text-teal-700 font-bold font-sans">Data-Driven Framework Building</td>
+                                <td class="p-3.5 text-slate-600 font-sans">Translates complex operations metrics into stable, scalable software solutions.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-medium font-sans">Presenting complex academic papers</td>
+                                <td class="p-3.5 text-teal-700 font-bold font-sans">Executive Stakeholder Briefing</td>
+                                <td class="p-3.5 text-slate-600 font-sans">Aligns highly technical developers and business executives on platform goals.</td>
+                            </tr>
+                            <tr class="bg-slate-50/50">
+                                <td class="p-3.5 font-medium font-sans">Designing an independent dissertation</td>
+                                <td class="p-3.5 text-teal-700 font-bold font-sans">End-to-End Product Management</td>
+                                <td class="p-3.5 text-slate-600 font-sans">Launches highly ambiguous, complex projects and structures workflows.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-between items-center text-xs text-slate-400 font-mono border-t border-slate-200 pt-4">
+                    <span>TRANSLATING EXPERIENCE</span>
+                    <span>PAGE 16</span>
+                </div>
+            </section>
+
+            <!-- Slide 17: Strategic Transition Model (Light Theme / Doughnut Chart) -->
+            <section class="slide-slide slide-theme-light bg-grid-pattern-light flex flex-col justify-between p-16" data-theme="light" data-slide-id="17">
+                <div class="flex justify-between items-start font-sans">
+                    <h3 class="text-2xl font-extrabold tracking-tight text-slate-900 border-l-4 border-emerald-500 pl-4 font-sans">
+                        Strategic Transition Model
+                    </h3>
+                    <span class="text-xs text-slate-400 font-mono">SLIDE 17</span>
+                </div>
+
+                <div class="grid grid-cols-12 gap-8 my-auto items-center font-sans">
+                    <div class="col-span-5 flex justify-center">
+                        <!-- Custom conic-gradient CSS layout with center cutout to represent visual distribution models -->
+                        <div class="relative w-52 h-52 rounded-full shadow-lg flex items-center justify-center border border-slate-200" style="background: conic-gradient(#0D9488 0% 40%, #4F46E5 40% 70%, #F59E0B 70% 90%, #64748B 90% 100%);">
+                            <div class="absolute w-36 h-36 bg-white rounded-full flex flex-col items-center justify-center border border-slate-100 font-sans">
+                                <span class="text-3xl font-black text-slate-900">70%</span>
+                                <span class="text-[9px] font-mono uppercase tracking-wider text-slate-400">Narrative &amp; Network</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-7 space-y-4 font-sans">
+                        <span class="text-xs font-mono text-emerald-600 uppercase tracking-widest font-bold">Effort Distribution Strategy</span>
+                        <h4 class="text-lg font-bold text-slate-800 font-sans">How you allocate your time decides pivot outcomes.</h4>
+                        
+                        <div class="grid grid-cols-2 gap-4 font-sans">
+                            <div class="flex items-center gap-3">
+                                <span class="w-4.5 h-4.5 rounded bg-teal-600 shrink-0"></span>
+                                <div class="text-xs font-sans">
+                                    <p class="font-bold text-slate-900">Relationship Building (40%)</p>
+                                    <p class="text-slate-500">Deliberate networking and warm intros</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="w-4.5 h-4.5 rounded bg-indigo-600 shrink-0"></span>
+                                <div class="text-xs font-sans">
+                                    <p class="font-bold text-slate-900">Narrative Formatting (30%)</p>
+                                    <p class="text-slate-500">Framing CV and portfolio outcomes</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="w-4.5 h-4.5 rounded bg-amber-500 shrink-0"></span>
+                                <div class="text-xs font-sans">
+                                    <p class="font-bold text-slate-900">Upskilling &amp; Portfolio (20%)</p>
+                                    <p class="text-slate-500">Targeted capability validation</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="w-4.5 h-4.5 rounded bg-slate-500 shrink-0"></span>
+                                <div class="text-xs font-sans">
+                                    <p class="font-bold text-slate-900">Cold Applications (10%)</p>
+                                    <p class="text-slate-500">Generic job board submittals</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center p-3 bg-teal-50 border border-teal-200/40 rounded-lg text-teal-950 text-xs italic font-sans">
+                    <strong>Model Insight:</strong> Transitions are heavily relationship-driven. Allocating 70% of transition bandwidth to dynamic relationship-building and strategic narrative positioning delivers 5x more interviews than bulk applications.
+                </div>
+            </section>
+
+            <!-- Slide 18: Q&A / Closing Session (Dark Theme) -->
+            <section class="slide-slide slide-theme-dark bg-grid-pattern flex flex-col justify-between p-16" data-theme="dark" data-slide-id="18">
+                <div class="absolute inset-0 bg-radial-gradient from-teal-950/20 to-transparent pointer-events-none"></div>
+                <div class="flex justify-between items-start font-sans">
+                    <span class="text-xs font-mono text-slate-500 font-sans">END OF SESSION</span>
+                    <span class="text-xs text-slate-500 font-mono">SLIDE 18</span>
+                </div>
+
+                <div class="my-auto max-w-3xl space-y-6 mx-auto text-center font-sans">
+                    <h2 class="text-6xl font-black tracking-tight leading-none font-sans text-white">
+                        Join the <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 font-sans">Conversation</span>
+                    </h2>
+                    <p class="text-xl text-slate-400 leading-relaxed font-sans max-w-xl mx-auto">
+                        What legacy experiences will you start translating today?
+                    </p>
+
+                    <div class="flex flex-wrap justify-center gap-4 pt-6 text-xs text-slate-300 font-mono font-sans">
+                        <div class="px-4 py-2.5 rounded-lg border border-slate-800 bg-slate-900/60 flex items-center gap-2">
+                            <i class="fa-solid fa-user text-teal-400"></i> Yusuf Oguntola (CTO, AFEX)
+                        </div>
+                        <div class="px-4 py-2.5 rounded-lg border border-slate-800 bg-slate-900/60 flex items-center gap-2">
+                            <i class="fa-solid fa-desktop text-teal-400"></i> Platform: Google Meet
+                        </div>
+                        <div class="px-4 py-2.5 rounded-lg border border-slate-800 bg-slate-900/60 flex items-center gap-2">
+                            <i class="fa-solid fa-calendar text-teal-400"></i> Saturday, 27th June 2026
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-xs text-slate-500 font-mono border-t border-slate-850 pt-4">
+                    <span>Q&amp;A OPEN TALK SESSION</span>
+                    <span>BCL ACADEMY</span>
+                </div>
+            </section>
+        </div>
+
+        <!-- Navigation Controls Panel -->
+        <div class="w-full max-w-[1280px] mt-6 flex flex-col sm:flex-row justify-between items-center gap-4 px-2 font-sans" id="controls-panel">
+            <div class="flex items-center gap-2 font-sans">
+                <button onclick="changeSlide(-1)" class="w-10 h-10 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 text-white flex items-center justify-center transition-colors border border-slate-700/40">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button onclick="changeSlide(1)" class="w-10 h-10 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 text-white flex items-center justify-center transition-colors border border-slate-700/40">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <button onclick="toggleAutoplay()" id="autoplay-btn" class="px-4 h-10 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 text-white text-xs font-semibold flex items-center gap-2 transition-colors border border-slate-700/40 font-sans">
+                    <i class="fa-solid fa-play"></i> Autoplay
+                </button>
+            </div>
+
+            <!-- Slide Thumbnail Jump Bar -->
+            <div class="flex gap-1.5 overflow-x-auto py-1 custom-scrollbar max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl">
+                <div id="bullet-nav" class="flex gap-1.5"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts for Canvas Scalability and Presentation Routing Controls -->
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 18;
+        let isAutoplay = false;
+        let autoplayTimer = null;
+        let isSlideShowMode = true;
+
+        const canvas = document.getElementById('slide-canvas');
+        const counter = document.getElementById('global-slide-counter');
+        const bulletNav = document.getElementById('bullet-nav');
+        const autoplayBtn = document.getElementById('autoplay-btn');
+
+        // Professional Scale Handling to fit any device monitor size beautifully
+        function handleResize() {
+            if (!isSlideShowMode) {
+                canvas.style.transform = "none";
+                return;
+            }
+            const winWidth = window.innerWidth;
+            const winHeight = window.innerHeight;
+            
+            // Margins to guarantee spacing around slide
+            const paddingWidth = winWidth < 768 ? 20 : 80;
+            const paddingHeight = winWidth < 768 ? 160 : 180;
+            
+            const targetWidth = winWidth - paddingWidth;
+            const targetHeight = winHeight - paddingHeight;
+            
+            const scaleX = targetWidth / 1280;
+            const scaleY = targetHeight / 720;
+            
+            // Maintain aspect ratio scaling down
+            const finalScale = Math.min(scaleX, scaleY, 1);
+            
+            canvas.style.transform = `scale(${finalScale})`;
+        }
+
+        // Initialize jump bullets with explicit Roboto classes
+        function renderBullets() {
+            bulletNav.innerHTML = '';
+            for (let i = 1; i <= totalSlides; i++) {
+                const btn = document.createElement('button');
+                btn.className = `w-7 h-7 rounded-md flex items-center justify-center font-mono text-[10px] font-bold border transition-all ${
+                    i === currentSlide 
+                        ? 'bg-teal-500 border-teal-400 text-slate-950 scale-105' 
+                        : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-800'
+                }`;
+                btn.textContent = String(i).padStart(2, '0');
+                btn.onclick = () => jumpToSlide(i);
+                bulletNav.appendChild(btn);
+            }
+        }
+
+        // Route slides
+        function changeSlide(direction) {
+            let next = currentSlide + direction;
+            if (next > totalSlides) next = 1;
+            if (next < 1) next = totalSlides;
+            jumpToSlide(next);
+        }
+
+        function jumpToSlide(slideNum) {
+            // Remove active from old slide
+            const activeSlide = document.querySelector('.slide-slide.active');
+            if (activeSlide) activeSlide.classList.remove('active');
+
+            // Add active to new slide
+            currentSlide = slideNum;
+            const targetSlide = document.querySelector(`[data-slide-id="${slideNum}"]`);
+            if (targetSlide) {
+                targetSlide.classList.add('active');
+                
+                // Adjust body backdrop class based on active slide theme for ambient luxury glow
+                const isLight = targetSlide.getAttribute('data-theme') === 'light';
+                document.body.style.backgroundColor = isLight ? "#020408" : "#05070B";
+            }
+
+            // Sync indicators
+            counter.textContent = `${String(currentSlide).padStart(2, '0')} / ${totalSlides}`;
+            renderBullets();
+        }
+
+        // Autoplay toggle functions
+        function toggleAutoplay() {
+            isAutoplay = !isAutoplay;
+            if (isAutoplay) {
+                autoplayBtn.innerHTML = `<i class="fa-solid fa-pause"></i> Pause`;
+                autoplayBtn.classList.add('bg-teal-600', 'text-white');
+                autoplayTimer = setInterval(() => changeSlide(1), 5000); // Shift every 5 seconds
+            } else {
+                autoplayBtn.innerHTML = `<i class="fa-solid fa-play"></i> Autoplay`;
+                autoplayBtn.classList.remove('bg-teal-600', 'text-white');
+                clearInterval(autoplayTimer);
+            }
+        }
+
+        // View Mode Toggle (Interactive Deck runner vs continuous scroll down)
+        function toggleViewMode() {
+            isSlideShowMode = !isSlideShowMode;
+            const viewport = document.getElementById('presentation-viewport');
+            const controls = document.getElementById('controls-panel');
+            const modeBtn = document.getElementById('view-mode-btn');
+            const keyHint = document.getElementById('keyboard-hint');
+
+            if (isSlideShowMode) {
+                // Return to clean single viewport slide modes
+                viewport.className = "flex flex-col items-center justify-center w-full h-full p-4 md:p-8 z-10 select-none";
+                canvas.className = "slide-aspect-ratio-box shadow-2xl rounded-2xl overflow-hidden border border-slate-800/50";
+                controls.classList.remove('hidden');
+                keyHint.classList.remove('hidden');
+                modeBtn.innerHTML = `<i class="fa-arrows-spin fa-solid"></i> Slide Show View`;
+                
+                // Active slide routing
+                document.querySelectorAll('.slide-slide').forEach(s => {
+                    s.style.position = 'absolute';
+                    s.style.opacity = '0';
+                    s.style.transform = 'scale(0.98)';
+                });
+                jumpToSlide(currentSlide);
+                handleResize();
+            } else {
+                // Continuous clean scrollable page layout (great for printing or quick text skimming)
+                viewport.className = "w-full overflow-y-auto py-12 px-4 space-y-12 select-text custom-scrollbar h-screen";
+                canvas.className = "w-full max-w-[1280px] flex flex-col gap-8 mx-auto !transform-none !h-auto !border-none !shadow-none";
+                controls.classList.add('hidden');
+                keyHint.classList.add('hidden');
+                modeBtn.innerHTML = `<i class="fa-solid fa-tablet-screen-button"></i> Vertical Page Scroll`;
+
+                document.querySelectorAll('.slide-slide').forEach((s, idx) => {
+                    s.style.position = 'relative';
+                    s.style.opacity = '1';
+                    s.style.visibility = 'visible';
+                    s.style.transform = 'scale(1)';
+                    s.style.display = 'flex';
+                    s.style.margin = '0 auto';
+                    s.style.boxShadow = '0 10px 25px -5px rgba(0,0,0,0.3)';
+                    s.style.borderRadius = '1rem';
+                });
+            }
+        }
+
+        // Listen for standard presentation keyboard binds
+        window.addEventListener('keydown', (e) => {
+            if (!isSlideShowMode) return;
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                changeSlide(-1);
+            }
+        });
+
+        // Bootstrap on load
+        window.onload = function() {
+            renderBullets();
+            handleResize();
+            window.addEventListener('resize', handleResize);
+        };
+    </script>
+</body>
+</html>
